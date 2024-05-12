@@ -1,0 +1,10 @@
+[package]
+name = "rust_pathfinding_benchmark"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+fast_paths = "1.0.0"
+faster_paths = { git = "https://github.com/christianstaib/faster_paths.git" }
+indicatif = "0.17.8"
+prettytable-rs = "0.10.0"
