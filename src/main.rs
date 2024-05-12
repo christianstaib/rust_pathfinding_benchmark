@@ -59,7 +59,7 @@ fn main() {
         //
         // fast_paths
         //
-        let mut input_graph = InputGraph::new(); //InputGraph::from_dimacs_file(path.path().to_str().unwrap());
+        let mut input_graph = InputGraph::new();
 
         for edge in all_edges(&graph) {
             input_graph.add_edge(
