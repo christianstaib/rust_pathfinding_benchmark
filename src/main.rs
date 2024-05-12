@@ -1,5 +1,6 @@
 use std::{
     fs,
+    thread::sleep,
     time::{Duration, Instant},
 };
 
@@ -45,6 +46,8 @@ fn main() {
 
         let path_finder = ChDijkstra::new(&contracted_graph);
         let mut times = Vec::new();
+
+        sleep(Duration::from_secs(3)); // cooldown and stuff
         for test_case in test_cases.iter().progress() {
             let start = Instant::now();
             let weight = path_finder.shortest_path_weight(&test_case.request);
@@ -74,6 +77,8 @@ fn main() {
         let fast_paths_generation = start.elapsed();
 
         let mut times = Vec::new();
+
+        sleep(Duration::from_secs(3)); // cooldown and stuff
         for test_case in test_cases.iter().progress() {
             let start = Instant::now();
             let shortest_path = fast_paths::calc_path(
