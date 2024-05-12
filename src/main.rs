@@ -76,12 +76,13 @@ fn main() {
         let fast_graph = fast_paths::prepare(&input_graph);
         let fast_paths_generation = start.elapsed();
 
+        let mut path_calculator = fast_paths::create_calculator(&fast_graph);
         let mut times = Vec::new();
 
         sleep(Duration::from_secs(3)); // cooldown and stuff
         for test_case in test_cases.iter().progress() {
             let start = Instant::now();
-            let shortest_path = fast_paths::calc_path(
+            let shortest_path = path_calculator.calc_path(
                 &fast_graph,
                 test_case.request.source() as usize,
                 test_case.request.target() as usize,
