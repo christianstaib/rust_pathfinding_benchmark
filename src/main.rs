@@ -4,7 +4,7 @@ use std::{
     time::{Duration, Instant},
 };
 
-use fast_paths::InputGraph;
+use fast_paths::{FastGraphBuilder, InputGraph, Params};
 use faster_paths::{
     ch::{
         ch_dijkstra::ChDijkstra,
@@ -28,18 +28,16 @@ fn main() {
         "faster_paths generation",
         "faster_paths query",
         "fast_paths generation",
-        "faster_paths query"
+        "fast_paths query"
     ]);
 
     for path in paths.flatten() {
         let graph = GraphFactory::from_file(&path.path());
-
         let test_cases = generate_random_pair_test_cases(&graph, 1_000);
 
         //
         // faster_paths
         //
-
         let start = Instant::now();
         let contracted_graph = contract_adaptive_simulated_with_witness(&graph);
         let faster_paths_generation = start.elapsed();
@@ -61,8 +59,8 @@ fn main() {
         //
         // fast_paths
         //
+        let mut input_graph = InputGraph::new(); //InputGraph::from_dimacs_file(path.path().to_str().unwrap());
 
-        let mut input_graph = InputGraph::new();
         for edge in all_edges(&graph) {
             input_graph.add_edge(
                 edge.tail() as usize,
@@ -70,9 +68,9 @@ fn main() {
                 edge.weight() as usize,
             );
         }
+        input_graph.freeze();
 
         let start = Instant::now();
-        input_graph.freeze();
         let fast_graph = fast_paths::prepare(&input_graph);
         let fast_paths_generation = start.elapsed();
 
@@ -87,12 +85,9 @@ fn main() {
                 test_case.request.source() as usize,
                 test_case.request.target() as usize,
             );
+            let weight = shortest_path.map(|path| path.get_weight() as u32);
             times.push(start.elapsed());
 
-            let mut weight = None;
-            if let Some(shortest_path) = shortest_path {
-                weight = Some(shortest_path.get_weight() as u32)
-            }
             assert_eq!(test_case.weight, weight);
         }
         let fast_paths_query = times.iter().sum::<Duration>() / times.len() as u32;
