@@ -4,16 +4,16 @@ use std::{
     time::{Duration, Instant},
 };
 
-use fast_paths::{FastGraphBuilder, InputGraph, Params};
+use fast_paths::InputGraph;
 use faster_paths::{
     ch::{
-        ch_dijkstra::ChDijkstra,
+        ch_dijkstra_state::ChDijkstraState,
         contraction_adaptive_simulated::contract_adaptive_simulated_with_witness,
     },
     graphs::{
         graph_factory::GraphFactory,
         graph_functions::{all_edges, generate_random_pair_test_cases},
-        path::PathFinding,
+        path::PathFindingWithInternalState,
     },
 };
 use indicatif::ProgressIterator;
@@ -42,7 +42,7 @@ fn main() {
         let contracted_graph = contract_adaptive_simulated_with_witness(&graph);
         let faster_paths_generation = start.elapsed();
 
-        let path_finder = ChDijkstra::new(&contracted_graph);
+        let mut path_finder = ChDijkstraState::new(&contracted_graph);
         let mut times = Vec::new();
 
         sleep(Duration::from_secs(3)); // cooldown and stuff
