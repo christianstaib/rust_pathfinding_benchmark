@@ -7,8 +7,8 @@ use std::{
 use fast_paths::InputGraph;
 use faster_paths::{
     ch::{
-        ch_dijkstra_state::ChDijkstraState,
         contraction_adaptive_simulated::contract_adaptive_simulated_with_witness,
+        pathfinding::dijkstra_with_state::ChDijkstraState,
     },
     graphs::{
         graph_factory::GraphFactory,
